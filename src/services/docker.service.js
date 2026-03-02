@@ -35,7 +35,7 @@ export class DockerService {
                 imageId: data.Image,
                 health: finalStatus,
                 projectName: containerInfo.Labels['com.docker.compose.project'] || 'Standalone',
-                serviceName: containerInfo.Labels['com.docker.compose.service'] || '',
+                serviceName: containerInfo.Labels['com.docker.compose.service'] || 'Standalone',
                 repoDigests: repoDigests
             };
         } catch (e) {
@@ -108,10 +108,10 @@ export class DockerService {
                 manifestUrl: `https://registry-1.docker.io/v2/${repo}/manifests/${tag}`
             };
         }
-        if (registry === 'ghcr.io') {
+        if (registry === 'ghcr.io' || registry === 'lscr.io') {
             return {
                 authUrl: `https://ghcr.io/token?scope=repository:${repo}:pull`,
-                manifestUrl: `https://ghcr.io/v2/${repo}/manifests/${tag}`
+                manifestUrl: `https://${registry}/v2/${repo}/manifests/${tag}`
             };
         }
         return {
