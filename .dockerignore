@@ -1,0 +1,7 @@
+node_modules
+public/vendor
+public/styles/tailwind.css
+data
+.github
+.git
+.env
