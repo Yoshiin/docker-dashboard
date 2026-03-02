@@ -28,6 +28,13 @@ export class DockerService {
                 console.warn(`Could not inspect image ${data.Image} for container ${data.Name}:`, imageErr.message);
             }
 
+            let source = 'local';
+            if (repoDigests.length > 0) {
+                const { registry } = this.parseImageName(data.Config.Image);
+                if (registry === 'registry-1.docker.io' || registry === 'docker.io') source = 'docker.io';
+                else source = registry;
+            }
+
             return {
                 id: data.Id,
                 name: data.Name.replace('/', ''),
@@ -36,7 +43,8 @@ export class DockerService {
                 health: finalStatus,
                 projectName: containerInfo.Labels['com.docker.compose.project'] || 'Standalone',
                 serviceName: containerInfo.Labels['com.docker.compose.service'] || 'Standalone',
-                repoDigests: repoDigests
+                repoDigests: repoDigests,
+                source: source
             };
         } catch (e) {
             console.error(`Error inspecting container ${containerInfo.Id}:`, e);

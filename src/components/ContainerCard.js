@@ -40,7 +40,8 @@ export const ContainerCard = (c) => {
                :class="loading ? 'animate-pulse' : ''">
           <div class="flex-1 min-w-0">
               <h3 class="text-sm font-bold text-gray-200 truncate">${c.name}</h3>
-              <p class="text-[10px] text-gray-300 truncate">Service: ${c.serviceName}</p>
+              <p class="text-[10px] text-gray-400 tracking-tight leading-tight truncate">Service: ${c.serviceName}</p>
+              <p class="text-[9px] text-gray-500 font-bold tracking-tight truncate mb-0.5">From: ${c.source}</p>
               <div class="flex items-center gap-2 mt-1">
                   <p class="text-[9px] font-bold uppercase tracking-wider"
                      :class="{

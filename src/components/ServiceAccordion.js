@@ -31,7 +31,7 @@ export const ServiceAccordion = (serviceName, containers) => {
                class="w-full flex items-center justify-between p-6 hover:bg-gray-750 transition-colors cursor-pointer">
               <div class="flex items-center space-x-4">
                   <div class="relative">
-                      <img src="/assets/images/docker-stack.png"
+                      <img src="${serviceName === 'Standalone' ? '/assets/images/docker.png' : '/assets/images/docker-stack.png'}"
                            class="w-10 h-10 object-contain bg-gray-900 p-1 rounded">
                       <template x-if="updateCount > 0">
                           <span class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-gray-800 shadow-lg"
