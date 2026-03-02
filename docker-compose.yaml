@@ -1,13 +1,13 @@
 services:
   docker-dashboard:
-    build: .
+    image: yoshin/docker-dashboard:latest
+    container_name: docker-dashboard
     ports:
       - "3000:3000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./data:/app/data
-    environment:
-      - ADMIN_USER=admin
-      - ADMIN_PASSWORD=admin
-      - REFRESH_TIME=10
-      - CACHE_TIME=30
+      - data:/app/data
+    restart: unless-stopped
+
+volumes:
+  data: null

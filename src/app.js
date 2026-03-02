@@ -55,7 +55,7 @@ app.get('/api/check-update', async (c) => {
   const containers = await dockerService.getContainers();
   const container = containers.find(cnt => cnt.imageId === id || cnt.fullImageId === id);
 
-  const result = await dockerService.checkUpdate(image, id, container?.repoDigests || []);
+  const result = await dockerService.checkUpdate(image, container?.repoDigests || []);
 
   let statusToStore;
   if (result.local) {
