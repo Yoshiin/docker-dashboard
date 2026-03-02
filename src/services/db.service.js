@@ -128,4 +128,8 @@ export class DbService {
         return this.db.prepare('INSERT OR REPLACE INTO image_cache (image_id, status, last_check) VALUES (?, ?, ?)')
             .run(imageId, status, lastCheck);
     }
+
+    clearImageCache() {
+        return this.db.prepare('DELETE FROM image_cache').run();
+    }
 }

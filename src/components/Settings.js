@@ -69,6 +69,22 @@ export const Settings = (settings, message = null) => {
                 </button>
             </form>
         </section>
+        <section class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+            <div class="p-6 border-b border-gray-700 bg-gray-900/20">
+                <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">Maintenance</h3>
+            </div>
+            <div class="p-6 space-y-4">
+                <p class="text-xs text-gray-500 leading-relaxed uppercase font-bold tracking-tight">
+                    Resetting the image cache will force the dashboard to re-check all container images for updates. 
+                    Use this if the update status labels appear out of sync.
+                </p>
+                <form action="/api/settings/reset-cache" method="POST">
+                    <button type="submit" class="w-full md:w-auto px-6 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/30 text-xs font-bold uppercase tracking-widest rounded-lg transition-colors">
+                        Reset Image Cache
+                    </button>
+                </form>
+            </div>
+        </section>
     </div>
   `;
 };

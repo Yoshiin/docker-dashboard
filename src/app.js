@@ -114,6 +114,11 @@ app.post('/api/settings/general', async (c) => {
   return c.redirect('/settings?msg=' + encodeURIComponent('Settings updated') + '&type=success');
 });
 
+app.post('/api/settings/reset-cache', async (c) => {
+  dbService.clearImageCache();
+  return c.redirect('/settings?msg=' + encodeURIComponent('Image cache cleared') + '&type=success');
+});
+
 app.post('/api/settings/password', async (c) => {
   const body = await c.req.parseBody();
   const sessionId = getCookie(c, 'session_id');
