@@ -5,7 +5,6 @@ import path from 'path';
 
 export class DbService {
     constructor(dbPath = 'data/dashboard.db') {
-        // Ensure data directory exists
         const dir = path.dirname(dbPath);
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
@@ -60,7 +59,7 @@ export class DbService {
 
         // Default Settings
         const settings = [
-            { key: 'refresh_time', value: process.env.REFRESH_TIME || '10' },
+            { key: 'refresh_time', value: process.env.REFRESH_TIME || '60' },
             { key: 'cache_time', value: process.env.CACHE_TIME || '30' }
         ];
 

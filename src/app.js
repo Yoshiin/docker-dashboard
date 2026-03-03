@@ -170,7 +170,7 @@ app.get('/', auth, (c) => {
   const refreshTime = dbService.getSetting('refresh_time') || '10';
   const content = html`
       ${Header()}
-      <div id="service-list" hx-get="/containers-list" hx-trigger="load, every ${refreshTime}s"></div>
+      <div id="service-list" class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start" hx-get="/containers-list" hx-trigger="load, every ${refreshTime}s"></div>
   `;
   return c.html(Layout(content));
 });

@@ -20,7 +20,7 @@ export const ServiceAccordion = (serviceName, containers) => {
     });
 
     return html`
-      <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden mb-4"
+      <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden"
            x-data="{ 
                 open: localStorage.getItem('stack-${serviceName}') === 'true',
                 updates: ${JSON.stringify(initialUpdates)},
@@ -44,17 +44,7 @@ export const ServiceAccordion = (serviceName, containers) => {
                       <p class="text-gray-400 text-xs">${containers.length} container(s)</p>
                   </div>
               </div>
-               <div class="flex items-center space-x-2 md:space-x-8">
-                  <div class="flex items-center justify-end">
-                      <button @click.stop="$dispatch('refresh-container', { projectId: '${serviceName}' })"
-                              class="p-2 hover:bg-gray-700 rounded-lg text-gray-400 hover:text-blue-400 transition-all flex items-center gap-2 group"
-                              title="Refresh all containers in this stack">
-                          <span class="text-[10px] font-bold uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity">Refresh Stack</span>
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                          </svg>
-                      </button>
-                  </div>
+               <div class="flex items-center space-x-2 md:space-x-4">
                   <div class="w-24 flex justify-center">
                       ${StatusBadge(globalStatus)}
                   </div>
@@ -65,7 +55,7 @@ export const ServiceAccordion = (serviceName, containers) => {
               </div>
           </div>
           <div x-show="open" x-cloak
-               class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-700 bg-gray-900/50">
+               class="p-6 grid grid-cols-1 gap-4 border-t border-gray-700 bg-gray-900/50">
               ${containers.map(c => ContainerCard(c))}
           </div>
       </div>`;

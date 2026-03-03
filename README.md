@@ -27,7 +27,7 @@ A lightweight Docker container monitoring dashboard built with Hono, HTMX, Alpin
    ```env
    ADMIN_USER=admin
    ADMIN_PASSWORD=admin
-   REFRESH_TIME=10
+   REFRESH_TIME=60
    CACHE_TIME=30
    ```
 
