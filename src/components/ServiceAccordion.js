@@ -5,11 +5,12 @@ import { StatusBadge } from "./StatusBadge.js";
 const STATUS_PRIORITY = {
     'dead': 1,
     'exited': 2,
-    'restarting': 3,
-    'starting': 4,
-    'running': 5,
-    'unhealthy': 6,
-    'healthy': 7
+    'stopped': 3,
+    'restarting': 4,
+    'starting': 5,
+    'running': 6,
+    'unhealthy': 7,
+    'healthy': 8
 };
 export const ServiceAccordion = (serviceName, containers) => {
     const sortedStatuses = containers.map(c => c.health).sort((a, b) => (STATUS_PRIORITY[a] || 99) - (STATUS_PRIORITY[b] || 99));

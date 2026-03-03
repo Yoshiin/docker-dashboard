@@ -76,25 +76,39 @@ app.get('/api/check-update', async (c) => {
 });
 
 app.get('/containers-list', async (c) => {
+  const statusFilter = c.req.query('status');
+  const searchFilter = c.req.query('search')?.toLowerCase();
+
   const enriched = await dockerService.getContainers();
 
-  const uiEnriched = enriched.map(data => {
-    const cached = dbService.getCachedImage(data.imageId);
-    let lastKnownStatus = cached ? cached.status : 'checking';
+  const uiEnriched = enriched
+    .map(data => {
+      const cached = dbService.getCachedImage(data.imageId);
+      let lastKnownStatus = cached ? cached.status : 'checking';
 
-    return {
-      ...data,
-      imageName: data.imageName.split(':')[0].split('/').pop(),
-      fullImage: data.imageName,
-      fullImageId: data.imageId,
-      lastKnownStatus: lastKnownStatus
-    };
-  });
+      return {
+        ...data,
+        imageName: data.imageName.split(':')[0].split('/').pop(),
+        fullImage: data.imageName,
+        fullImageId: data.imageId,
+        lastKnownStatus: lastKnownStatus
+      };
+    })
+    .filter(data => {
+      const matchStatus = !statusFilter || data.health === statusFilter;
+      const matchSearch = !searchFilter || data.projectName.toLowerCase().includes(searchFilter);
+      return matchStatus && matchSearch;
+    });
 
   const stacks = uiEnriched.reduce((acc, curr) => {
     (acc[curr.projectName] = acc[curr.projectName] || []).push(curr);
     return acc;
   }, {});
+
+  if (Object.keys(stacks).length === 0) {
+    return c.html(html`<div class="col-span-full py-20 text-center"><p class="text-gray-500 font-bold uppercase tracking-widest text-xs">No stacks matching filters</p></div>`);
+  }
+
   return c.html(Object.keys(stacks).sort().map(name => ServiceAccordion(name, stacks[name])).join(''));
 });
 
@@ -167,10 +181,59 @@ app.get('/logout', (c) => {
 });
 
 app.get('/', auth, (c) => {
-  const refreshTime = dbService.getSetting('refresh_time') || '10';
+  const refreshTime = dbService.getSetting('refresh_time') || '60';
   const content = html`
       ${Header()}
-      <div id="service-list" class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start" hx-get="/containers-list" hx-trigger="load, every ${refreshTime}s"></div>
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6" x-data="{ search: '' }">
+          <div class="relative w-full md:w-96">
+              <input type="text" 
+                     name="search" 
+                     x-model="search"
+                     x-ref="searchInput"
+                     placeholder="Search stacks..." 
+                     hx-get="/containers-list" 
+                     hx-target="#service-list" 
+                     hx-trigger="input changed delay:300ms, search-clear"
+                     hx-include="[name='status'], [name='search']"
+                     class="w-full bg-gray-800 border border-gray-700 text-gray-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-blue-500 transition-colors pl-10 pr-10">
+              <svg class="w-4 h-4 text-gray-500 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              <button x-show="search.length > 0" 
+                      @click="search = ''; $nextTick(() => { htmx.trigger($refs.searchInput, 'search-clear'); $refs.searchInput.focus(); })"
+                      class="absolute right-3 top-2.5 p-1 text-gray-500 hover:text-gray-300 transition-colors"
+                      type="button"
+                      x-cloak>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+              </button>
+          </div>
+          <div class="flex items-center gap-3 w-full md:w-auto">
+              <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Status:</span>
+              <select name="status" 
+                      hx-get="/containers-list" 
+                      hx-target="#service-list" 
+                      hx-trigger="change"
+                      hx-include="[name='status'], [name='search']"
+                      class="bg-gray-800 border border-gray-700 text-gray-300 text-[10px] font-bold uppercase tracking-widest rounded-lg px-3 py-2.5 focus:outline-none focus:border-blue-500 transition-colors cursor-pointer appearance-none min-w-[140px]">
+                  <option value="">All</option>
+                  <option value="healthy">Healthy</option>
+                  <option value="running">Running</option>
+                  <option value="unhealthy">Unhealthy</option>
+                  <option value="starting">Starting</option>
+                  <option value="restarting">Restarting</option>
+                  <option value="stopped">Stopped</option>
+                  <option value="exited">Exited</option>
+                  <option value="dead">Dead</option>
+              </select>
+          </div>
+      </div>
+      <div id="service-list" 
+           class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start" 
+           hx-get="/containers-list" 
+           hx-trigger="load, every ${refreshTime}s"
+           hx-include="[name='status'], [name='search']"></div>
   `;
   return c.html(Layout(content));
 });
