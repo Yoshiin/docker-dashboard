@@ -1,6 +1,6 @@
 {
   "name": "docker-dashboard",
-  "version": "1.0.2",
+  "version": "0.0.0",
   "description": "A lightweight Docker container monitoring dashboard built with Hono, HTMX, Alpine.js, and Tailwind CSS.",
   "author": "Yoshin",
   "main": "src/app.js",
