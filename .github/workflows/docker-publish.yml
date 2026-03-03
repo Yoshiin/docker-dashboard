@@ -35,15 +35,20 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/mon-dashboard:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/mon-dashboard:${{ steps.package_version.outputs.version }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/docker-dashboard:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/docker-dashboard:${{ steps.package_version.outputs.version }}
+
+      - name: Build Changelog
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.package_version.outputs.version }}
-          name: Release v${{ steps.package_version.outputs.version }}
-          generate_release_notes: true
-          target_commitish: ${{ github.sha }}
+          name: v${{ steps.package_version.outputs.version }}
+          body: ${{ steps.build_changelog.outputs.changelog }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
