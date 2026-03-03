@@ -13,9 +13,12 @@ import { DbService } from "./services/db.service.js";
 import { DockerService } from "./services/docker.service.js";
 import { authMiddleware } from "./middlewares/auth.middleware.js";
 
+import pkg from "../package.json" with { type: "json" };
+
 const app = new Hono()
 const dockerService = new DockerService();
 const dbService = new DbService();
+const version = pkg.version;
 
 const auth = authMiddleware(dbService);
 
@@ -118,7 +121,7 @@ app.get('/settings', (c) => {
   const settings = dbService.getAllSettings();
   const message = msgText ? { text: msgText, type: msgType } : null;
 
-  return c.html(Layout(Settings(settings, message), "Settings - Docker Dashboard"));
+  return c.html(Layout(Settings(settings, message), "Settings - Docker Dashboard", version));
 });
 
 app.post('/api/settings/general', async (c) => {
@@ -155,7 +158,7 @@ app.post('/api/settings/password', async (c) => {
 
 app.get('/login', (c) => {
   const hasError = c.req.query('error') === '1';
-  return c.html(Login(hasError));
+  return c.html(Login(hasError, version));
 });
 
 app.post('/login', async (c) => {
@@ -235,7 +238,7 @@ app.get('/', auth, (c) => {
            hx-trigger="load, every ${refreshTime}s"
            hx-include="[name='status'], [name='search']"></div>
   `;
-  return c.html(Layout(content));
+  return c.html(Layout(content, "Docker Dashboard", version));
 });
 
 serve({ fetch: app.fetch, port: 3000 });

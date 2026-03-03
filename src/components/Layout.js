@@ -1,7 +1,7 @@
 import { html } from "hono/html";
 import { Notifications } from "./Notifications.js";
 
-export const Layout = (content, title = "Docker Dashboard") => {
+export const Layout = (content, title = "Docker Dashboard", version = "") => {
     return html`
     <!DOCTYPE html>
     <html lang="en">
@@ -17,7 +17,7 @@ export const Layout = (content, title = "Docker Dashboard") => {
             body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
         </style>
     </head>
-    <body class="bg-gray-900 text-gray-100 p-4 md:p-8"
+    <body class="bg-gray-900 text-gray-100 p-4 md:p-8 flex flex-col min-h-screen"
           x-data="{ 
             notifications: [], 
             addNotification(msg, type = 'success') {
@@ -29,10 +29,16 @@ export const Layout = (content, title = "Docker Dashboard") => {
             }
           }"
           @show-notification.window="addNotification($event.detail.msg, $event.detail.type)">
-        <div class="max-w-6xl mx-auto">
+        <div class="max-w-6xl mx-auto flex-grow w-full">
             ${content}
         </div>
         
+        <footer class="mt-auto pt-10 pb-4 text-center">
+            <p class="text-[10px] font-bold text-gray-600 uppercase tracking-[0.2em]">
+                DOCKER DASHBOARD <span class="text-gray-700 mx-2">|</span> v${version}
+            </p>
+        </footer>
+
         ${Notifications()}
     </body>
     </html>

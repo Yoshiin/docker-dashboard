@@ -1,6 +1,6 @@
 import { html } from 'hono/html'
 
-export const Login = (error = false) => {
+export const Login = (error = false, version = "") => {
     return html`
         <!DOCTYPE html>
         <html lang="en">
@@ -11,8 +11,8 @@ export const Login = (error = false) => {
             <script src="/assets/vendor/alpine.js" defer></script>
             <link rel="stylesheet" href="/assets/vendor/tailwind.css">
         </head>
-        <body class="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center p-4 antialiased">
-            <div class="w-full max-w-sm">
+        <body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center justify-center p-4 antialiased">
+            <div class="w-full max-w-sm flex-grow flex flex-col justify-center">
                 <!-- Header -->
                 <div class="mb-8 flex flex-col items-center">
                     <h1 class="text-3xl font-black text-white italic tracking-tighter uppercase leading-none">
@@ -56,6 +56,12 @@ export const Login = (error = false) => {
                     </form>
                 </div>
             </div>
+
+            <footer class="mt-auto py-8 text-center">
+                <p class="text-[10px] font-bold text-gray-600 uppercase tracking-[0.2em]">
+                    v${version}
+                </p>
+            </footer>
         </body>
         </html>
     `;
