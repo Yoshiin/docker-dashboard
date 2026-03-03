@@ -2,6 +2,8 @@
 
 A lightweight Docker container monitoring dashboard built with Hono, HTMX, Alpine.js, and Tailwind CSS.
 
+![Dashboard Screenshot](https://raw.githubusercontent.com/Yoshiin/docker-dashboard/main/assets/screenshot.png)
+
 ## Getting Started
 
 ### Prerequisites
