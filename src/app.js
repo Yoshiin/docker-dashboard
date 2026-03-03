@@ -26,6 +26,8 @@ app.use('/containers-list', auth);
 app.use('/settings', auth);
 app.use('/api/*', auth);
 
+app.get('/health', (c) => c.text('OK', 200));
+
 app.use('/assets/*', serveStatic({
   root: './public',
   rewriteRequestPath: (path => path.replace(/^\/assets/, ''))
